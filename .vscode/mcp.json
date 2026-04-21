@@ -1,0 +1,19 @@
+{
+  "inputs": [
+    {
+      "type": "promptString",
+      "id": "dynatrace_platform_token_v3",
+      "description": "Dynatrace Platform Token (mcp-gateway:servers:invoke + read)",
+      "password": true
+    }
+  ],
+  "servers": {
+    "dynatrace-mcp": {
+      "type": "http",
+      "url": "https://hci34192.apps.dynatrace.com/platform-reserved/mcp-gateway/v0.1/servers/dynatrace-mcp/mcp",
+      "headers": {
+        "Authorization": "Bearer ${input:dynatrace_platform_token_v3}"
+      }
+    }
+  }
+}

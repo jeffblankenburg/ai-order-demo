@@ -1,0 +1,10 @@
+{
+    "chat.mcp.serverSampling": {
+        "ai-order-demo/.vscode/mcp.json: dynatrace-mcp": {
+            "allowedModels": [
+                "copilot/auto",
+                "copilotcli/claude-sonnet-4.6"
+            ]
+        }
+    }
+}
