@@ -8,28 +8,24 @@ What Jeff does on stage, minute by minute. Everything in "Pre-demo checklist" is
 
 Run through in order. If any step is red, fix before going on.
 
-- [ ] **Docker Desktop running.** `docker ps` shows `ai-order-demo-db`.
-- [ ] **API up.** `curl http://localhost:4000/health` returns `{"ok":true}`.
-- [ ] **Web up.** `http://localhost:3001` renders the Orders table.
+- [ ] **Docker Desktop running.**
+- [ ] **Run `./start-demo.sh`** — brings Postgres + API + web + load-gen up and waits until each is healthy. Prints the web URL when ready.
 - [ ] **MCP up.** Command Palette → `MCP: List Servers` → `dynatrace-mcp` shows **Running**.
 - [ ] **Copilot Chat in Agent mode.** Dynatrace tools visible and checked.
-- [ ] **Load-gen running** in a hidden terminal pane. See below — without this the p95 graph is flat and the whole demo falls on its face.
 - [ ] **Dynatrace tab pre-loaded** in a browser, minimized. For the 5-second reveal only.
 - [ ] **VS Code zoomed** to 20pt+ font. Side panel closed so chat has room.
-- [ ] **Index does NOT exist yet.** Verify: `docker exec ai-order-demo-db psql -U orders -d orders -c "\d orders"` — should show no index on `user_id`.
+- [ ] **Index does NOT exist yet.** Verify: `docker exec ai-order-demo-db psql -U orders -d orders -c "\d orders"` — should show no index on `user_id`. (The reset script drops it; the startup script doesn't create it.)
 
-### Load-gen setup (keep running the whole demo)
+### What `start-demo.sh` starts for you
 
-Hidden terminal, paste this:
+| Piece | Where | Log file |
+|---|---|---|
+| Postgres | Docker container `ai-order-demo-db` | `docker logs ai-order-demo-db` |
+| API | `http://localhost:4000` | `.demo-logs/api.log` |
+| Web | `http://localhost:3000` or `:3001` | `.demo-logs/web.log` |
+| Load-gen | ~2 rps `curl` loop | `.demo-logs/loadgen.log` |
 
-```bash
-while true; do
-  curl -s -o /dev/null "http://localhost:4000/orders?userId=$((RANDOM % 1000 + 1))"
-  sleep 0.5
-done
-```
-
-~2 rps. Leave it until the demo ends.
+All four are detached and keep running after the script exits. Stop everything with `./reset-demo.sh`.
 
 ---
 

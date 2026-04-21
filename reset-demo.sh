@@ -26,6 +26,10 @@ git fetch origin main
 echo "==> git reset --hard origin/main"
 git reset --hard origin/main
 
+echo "==> Removing untracked files Copilot added during rehearsal..."
+# Respects .gitignore, so node_modules / .env / .demo-logs are preserved.
+git clean -fd
+
 echo "==> Dropping idx_orders_user_id..."
 docker exec ai-order-demo-db psql -U orders -d orders \
   -c "DROP INDEX IF EXISTS idx_orders_user_id;"
