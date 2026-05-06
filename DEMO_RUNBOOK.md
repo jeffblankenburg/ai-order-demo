@@ -115,17 +115,17 @@ git add -A && git commit -m "add orders status endpoint with tracing"
 
 In Copilot Chat:
 
-> Use Dynatrace to tell me if anything's slow on the orders-api service right now. Show me the p95 latency and compare it to what you'd expect.
+> Use Dynatrace to tell me if anything's slow on the orders-api service in the last five minutes. Show me the p95 latency and compare it to what you'd expect. If there is a latency issue, please explain why and implement a solution.
 
 **Expected:** Copilot calls MCP → returns something like "p95 on GET /orders is ~155ms, which is noticeably slow for a simple list endpoint."
 
 **If it returns empty:**
 - Check the load-gen terminal. If it died, restart it and wait 30 seconds.
-- Fallback prompt: `Show me the 10 most recent traces for orders-api, sorted by duration descending.`
+- Fallback prompt: `Show me the 10 most recent traces for orders-api from the last 5 minutes, sorted by duration descending.`
 
 ### Beat 2 — "Find the slow thing" (10:00–13:00)
 
-> What's the slowest span inside those p95 traces? Show me the SQL if there is one.
+> What's the slowest span inside those p95 traces from the last 5 minutes? Show me the SQL if there is one.
 
 **Expected:** Copilot surfaces the `pg.query:SELECT orders` span, ~150ms of the 155ms total, and shows the SQL text.
 
@@ -162,7 +162,7 @@ docker exec ai-order-demo-db psql -U orders -d orders \
 
 In Copilot Chat:
 
-> Is the p95 recovering now? Check the most recent traces for orders-api.
+> Is the p95 recovering now? Check the traces for orders-api from the last 1 minute.
 
 **Expected:** Copilot reports p95 is now ~5–15ms — a 10–20× drop. (Load-gen is still running, so new traces reflect the fix.)
 
